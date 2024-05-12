@@ -1,8 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 from youtube_transcript_api import YouTubeTranscriptApi
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from pdf import PDF
 import time
 import os
 from dotenv import load_dotenv
@@ -24,17 +23,14 @@ def generate_summary(transcript):
     Learning Objectives: 
         [List of key concepts covered in the video that the learner should understand]
     Summary:
-        [An expert summary of the video content. This should be detailed, informative and should cover the key points of the video.]
+        [An expert summary of the video content. This should be detailed, informative and should cover every key points of the video.]
     Additional Resources:
         [Suggest additional resources or references related to the video content that you think the user should should checkout.]
     Assessment:
-        [Create a set of questions not more than 5 to test the user's understanding of the video content.]
+        [Create a list of questions not more than 5 to test the user's understanding of the video content.]
     
-    You are given the following youtube video transcript:{transcript}
-    There should not be more than 12 words on a single line in the summary section and summary section should
-    contain at least 100 words.
-    This is extremely important as it will help parse the output into a pdf converter.
-    Let me repeat again, there should not be more than 12 words on a single line in the summary section.
+    You are given this youtube video transcript:{transcript}
+    It is important to write extensively and not deviate from the video content.
     '''
     summary = model.generate_content(prompt)
     return summary.text
@@ -50,16 +46,16 @@ def extract_transcript_details(youtube_video_url):
         st.error(f"Failed to fetch transcript: {e}")
         return None
 
-# convert transcript text to pdf
-def create_pdf_from_string(pdf_filename, text):
-    c = canvas.Canvas(pdf_filename, pagesize=letter)
-    c.setFont("Helvetica", 12)
-    lines = text.split("\n")
-    y = 750
-    for line in lines:
-        c.drawString(50, y, line)
-        y -= 14
-    c.save()
+def create_pdf(name, text):
+    # Create a PDF object
+    pdf = PDF('P', 'mm', 'Letter')
+    # get total page numbers
+    pdf.alias_nb_pages()
+    # Set auto page break
+    pdf.set_auto_page_break(auto = True, margin = 15)
+    # Add a page and populate with text
+    pdf.print_chapter(1, 'Summary', text=text)
+    return pdf.output(name)
 
 st.title('SELF-TAUGHT: AI-UPSKILLING COMPANION')
 st.divider()
@@ -73,8 +69,8 @@ if url and url_button:
     transcript = extract_transcript_details(url)
     summary = generate_summary(transcript)
     with st.spinner('Fetching video transcript and generating summary...'):
-        time.sleep(2)
+        time.sleep(1)
     st.write(summary)
-    st.button('Download Transcript PDF', type='secondary', on_click=create_pdf_from_string, args=('lesson_plan2.pdf', summary))
+    st.button('Download Transcript PDF', type='secondary', on_click=create_pdf, args=('lesson_plan3.pdf', summary))
     
     
