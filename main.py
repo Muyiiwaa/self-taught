@@ -57,6 +57,17 @@ def create_pdf(name, text):
     pdf.print_chapter(1, 'Summary', text=text)
     return pdf.output(name)
 
+with st.sidebar:
+    st.title('SELF-TAUGHT')
+    st.divider()
+    st.text_area('feedback', placeholder='Please leave your feedback here...',
+                 label_visibility='hidden', height=170, max_chars=100)
+    if st.button(label ='Submit', type='primary'):
+        with st.spinner('Submitting feedback...'):
+            time.sleep(1)
+        st.success('Feedback submitted successfully!')
+    st.divider()
+
 st.title('SELF-TAUGHT: AI-UPSKILLING COMPANION')
 st.divider()
 with st.container(height=220):
@@ -71,6 +82,11 @@ if url and url_button:
         summary = generate_summary(transcript)
     st.success('Summary generated successfully!')
     st.write(summary)
-    st.button('Download Transcript PDF', type='secondary', on_click=create_pdf, args=('lesson_plan.pdf', summary))
+    download_pdf, clear_button = st.columns(2)
+    with download_pdf:
+        st.button('Download Transcript PDF', type='secondary', on_click=create_pdf, args=('lesson_plan.pdf', summary))
+    with clear_button:
+        if st.button('Clear Output', type='secondary'):
+            pass
     
     
