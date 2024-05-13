@@ -67,10 +67,10 @@ url = st.text_input(label='url',
 url_button = st.button('Fetch Video Transcript', type='primary')
 if url and url_button:
     transcript = extract_transcript_details(url)
-    summary = generate_summary(transcript)
-    with st.spinner('Fetching video transcript and generating summary...'):
-        time.sleep(1)
+    with st.spinner('Transcript fetched, now generating summary...'):
+        summary = generate_summary(transcript)
+    st.success('Summary generated successfully!')
     st.write(summary)
-    st.button('Download Transcript PDF', type='secondary', on_click=create_pdf, args=('lesson_plan3.pdf', summary))
+    st.button('Download Transcript PDF', type='secondary', on_click=create_pdf, args=('lesson_plan.pdf', summary))
     
     
