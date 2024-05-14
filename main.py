@@ -17,20 +17,25 @@ model = genai.GenerativeModel('gemini-pro')
 
 
 def generate_summary(transcript):
-    prompt =f'''
-    You are a youtube video transcript summarizer. You are given a youtube video transcript and you need to summarize the video in the format below.
+    prompt = f'''
+    You are a youtube video transcript note creator. You are given a youtube video transcript and you need to create a 
+    a detailed study note for the user. The note must have the following segments:
     Lesson Title: [Title of the video]
     Learning Objectives: 
         [List of key concepts covered in the video that the learner should understand]
-    Summary:
-        [An expert summary of the video content. This should be detailed, informative and should cover every key points of the video.]
+    Body:
+        [An expert note of the video content. This should be detailed, informative 
+        and should cover every key points of the video and additional input that will help the user.]
     Additional Resources:
-        [Suggest additional resources or references related to the video content that you think the user should should checkout.]
+        [Suggest additional resources or references related to the video content
+         that you think the user should checkout.]
     Assessment:
-        [Create a list of questions not more than 5 to test the user's understanding of the video content.]
+        [Create a list of questions not more than ten to test the user's understanding of the video content.]
     
     You are given this youtube video transcript:{transcript}
-    It is important to write extensively and not deviate from the video content.
+    It is important to write extensively like a pro on the subject
+     and not deviate from the video content. It is also important to not include asteriks in the titles and
+     subheadings.
     '''
     summary = model.generate_content(prompt)
     return summary.text
@@ -68,10 +73,10 @@ with st.sidebar:
         st.success('Feedback submitted successfully!')
     st.divider()
 
-st.title('SELF-TAUGHT: AI-UPSKILLING COMPANION')
+st.title('SUMMARIZE WITH SELF-TAUGHT')
 st.divider()
 with st.container(height=220):
-    st.subheader('Welcome to the AI-Upskilling Companion!', divider=True)
+    st.subheader('Your YouTube Video Study Companion!', divider=True)
     st.write('Welcome to the AI-Upskilling Companion! This tool is designed to help you get more value from your learning experience on youtube. Simply paste the URL of the video you are watching and we will provide you with a summary of the video, a list of key concepts, and a quiz to test your understanding of the material.')
 url = st.text_input(label='url',
                     label_visibility='hidden', placeholder='https://www.youtube.com/watch?v=...')
@@ -88,5 +93,3 @@ if url and url_button:
     with clear_button:
         if st.button('Clear Output', type='secondary'):
             pass
-    
-    
