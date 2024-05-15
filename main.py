@@ -89,7 +89,13 @@ if url and url_button:
     st.write(summary)
     download_pdf, clear_button = st.columns(2)
     with download_pdf:
-        st.button('Download Transcript PDF', type='secondary', on_click=create_pdf, args=('lesson_plan.pdf', summary))
+        create_pdf(name='summary.pdf', text=summary)
+        with open('summary.pdf', 'rb') as file:
+            file_pdf = file.read()
+        st.download_button(label="Download PDF",
+                           data=file_pdf,
+                           file_name="note.pdf",
+                           mime='application/octet-stream')
     with clear_button:
         if st.button('Clear Output', type='secondary'):
             pass
