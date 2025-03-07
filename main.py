@@ -13,13 +13,13 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # Set up Google Gemini-Pro AI model
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 
 def generate_summary(transcript):
     prompt = f'''
-    You are a youtube video transcript note creator. You are given a youtube video transcript and you need to create a 
-    a detailed study note for the user. The note must have the following segments:
+    You are a very experienced educator. You are given a youtube video transcript and you need to create a 
+    a detailed study note for the user. The note must only have the following segments:
     Lesson Title: [Title of the video]
     Learning Objectives: 
         [List of key concepts covered in the video that the learner should understand]
@@ -30,11 +30,11 @@ def generate_summary(transcript):
         [Suggest additional resources or references related to the video content
          that you think the user should checkout.]
     Assessment:
-        [Create a list of questions not more than ten to test the user's understanding of the video content.]
+        [A list of questions not more than ten to test the user's understanding of the video content.]
     
     You are given this youtube video transcript:{transcript}
-    It is important to write extensively like a pro on the subject
-     and not deviate from the video content. It is also important to not include asteriks in the titles and
+    It is important to write extensively like a professional educator on the subject
+     and you must never deviate from the video content. It is also important to not include asteriks in the titles and
      subheadings.
     '''
     summary = model.generate_content(prompt)
